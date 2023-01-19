@@ -92,7 +92,7 @@ int main()
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
 
-	unsigned char* data = stbi_load("..\\Project1\\res\\container.jpg", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load(".\\res\\container.jpg", &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -113,7 +113,7 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	data = stbi_load("..\\Project1\\res\\awesomeface.png", &width, &height, &nrChannels, 0);
+	data = stbi_load(".\\res\\awesomeface.png", &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -125,18 +125,19 @@ int main()
 	}
 	stbi_image_free(data);
 
-
-	//自定义着色器
-	Shader myshader("..\\Project1\\src\\shader\\shader.vs", "..\\Project1\\src\\shader\\shader.fs");
+	Shader myshader(".\\src\\shader\\shader.vs", ".\\src\\shader\\shader.fs");
 
 	myshader.use();
 	myshader.setInt("ourTexture1", 0);
 	myshader.setInt("ourTexture2", 1);
 
+	// rendering loop
 	while (!glfwWindowShouldClose(window))
 	{
+		// user input
 		processInput(window);
 
+		// rendering process
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -155,10 +156,12 @@ int main()
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
+		// check and swap buffer
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
+	// release
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
