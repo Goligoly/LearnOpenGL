@@ -1,5 +1,8 @@
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include "myShader.h"
 #include "stb_image.h"
@@ -131,8 +134,14 @@ int main()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
+		float time = glfwGetTime();
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::rotate(trans, time, glm::vec3(0.0, 0.0, 1.0));
+		trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+
 		myshader.use();
-		myshader.setFloat("_MixValue", sin(glfwGetTime()) * 0.5f + 0.5f);
+		myshader.setFloat("_MixValue", sin(time) * 0.5f + 0.5f);
+		myshader.setMatrix("transform", trans);
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
